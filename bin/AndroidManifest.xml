@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com.keshogroup.cartrader"
+    android:versionCode="1"
+    android:versionName="1.0" >
+
+    <uses-sdk
+        android:minSdkVersion="16"
+         />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
+    <uses-permission android:name="android.permission.INTERNET"/>
+    
+
+    <application
+        android:allowBackup="false"
+        android:icon="@drawable/ic_launcher_autotrader"
+        android:label="@string/app_name"
+        android:theme="@style/Theme.AppCompat.Light.DialogWhenLarge" 
+        android:enabled="true"
+        >
+        
+   		<service android:name=".Myservice" android:icon="@drawable/circle"></service>
+            
+        
+        <activity
+            
+            android:name=".MainActivitycartrader"
+            android:label="@string/app_name" 
+            android:screenOrientation="portrait">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+     
+    </application>
+
+</manifest>

@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string-array name="car_database">
+        
+        <item >Mazda 626</item>
+        <item >honda crv</item>
+        <item >chevorlet corette</item>
+    </string-array>
+    
+    <string name="item1">Mazda 626</string>
+    <string name="item2">Honda CRV</string>
+    <string name="item3">Chevorlet Corette</string>
+    
+
+</resources>
