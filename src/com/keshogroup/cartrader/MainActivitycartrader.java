@@ -8,15 +8,18 @@ package com.keshogroup.cartrader;
  * 
  */
 
+import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.ActionBarActivity;
 import android.app.Activity;
 import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.Notification.Builder;
 import android.app.PendingIntent;
+import android.content.BroadcastReceiver;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.ServiceConnection;
 import android.graphics.Color;
 import android.os.Bundle;
@@ -52,29 +55,53 @@ public class MainActivitycartrader extends Activity {
 	CharSequence text2;
 	String string2;
 	SimpleAdapter simpleadapter;
-	ListView lv1,lv3,lv4;
+	ListView lv1,lv2,lv4;
 	ListAdapter listadapter;
 	//ArrayAdapter aadapter;
-	Button button1, button2, button3, button4, buttonback; 
-	RelativeLayout main, searchlist;
+	Button button1, button2, button3, button4, button5, buttonback2, buttonback; 
+	RelativeLayout main, searchlist, restlist;
 	//Myservice myservice;
 	//Myservice myservice= new Myservice("Myservice");
 	//myservice.onHandleIntent(myintent);//works
 	Intent myintent;
 	Intent myintent2;
-	
+	ArrayAdapter<String> aadapter2;
 	//PendingIntent pi;
 	//pi =new PendingIntent();
 	ServiceConnection sc;
 	String sa[] = new String[40];
+	String array[] = new String[400];
+	//static final String REST_ARRAY[] = new String[400];
+	BroadcastReceiver br= new BroadcastReceiver() {
+		
+		@Override
+		public void onReceive(Context context, Intent intent) {
+			// TODO Auto-generated method stub
+			Log.i("JSON", "Broadcasr recieved");
+			if(intent.getStringArrayExtra("com.keshogroup.cartrader.array")!=null){
+				//update the array, adapter, and view
+				array=intent.getStringArrayExtra("com.keshogroup.cartrader.array");
+            	aadapter2 = new ArrayAdapter<String>(MainActivitycartrader.this, R.layout.list2, array);
+            	lv2.setAdapter(aadapter2);
+				Log.i("JSON", "updated array");
+			}
+		}
+	};
+	LocalBroadcastManager lbm=null;
+	IntentFilter filter;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main_activity_cartrader);
 		
+		filter= new IntentFilter("actionpack");
+		this.registerReceiver(br, filter);
+		//LocalBroadcastManager.getInstance(this).registerReceiver(br, filter);
 		myintent = new Intent(this, Myservice.class);
 		myintent2= new Intent(MediaStore.INTENT_ACTION_STILL_IMAGE_CAMERA);//emulator has no camera
+		
+		array[0]="temp";
 		 
 		sa[0]="Dodge Caravan";      sa[4]="Dodge Caravan";        sa[5]="Dodge Caravan";
 		sa[1]="Mazda 626";
@@ -90,7 +117,14 @@ public class MainActivitycartrader extends Activity {
 		sa[13]="Toyota camry";      sa[22]="Lexus is250";        sa[30]="Lexus ES 350";
 		sa[14]="Dodge Caravan";      sa[23]="Dodge Caravan";        sa[31]="Dodge Caravan";
 		
+		//fill up the array so there are no null pointers
+		for(int c=0; c<400;c++){
+			array[c]="no data";
+		}
+		
 		ArrayAdapter<String> aadapter = new ArrayAdapter<String>(this, R.layout.lists, sa);
+		aadapter2 = new ArrayAdapter<String>(this, R.layout.list2, array);
+		
 		//ArrayAdapter aadapter = new ArrayAdapter(this, R.string.app_name);
 		//ArrayAdapter aadapter = new ArrayAdapter(this, R.id.l2tv1);
 		
@@ -98,13 +132,17 @@ public class MainActivitycartrader extends Activity {
 		tv3 = (TextView) findViewById(R.id.textView3);
 		tv4 = (TextView) findViewById(R.id.textView4);
 		lv1 = (ListView) findViewById(R.id.listView1);
+		lv2 = (ListView) findViewById(R.id.listView2);
 		button1 = (Button) findViewById(R.id.button1);
 		button2 = (Button) findViewById(R.id.button2);
 		button3 = (Button) findViewById(R.id.button3);
 		button4 = (Button) findViewById(R.id.button4);
+		button5 = (Button) findViewById(R.id.button5);
 		buttonback = (Button) findViewById(R.id.buttonback);
+		buttonback2 = (Button) findViewById(R.id.buttonback2);
 		main = (RelativeLayout) findViewById(R.id.main);
 		searchlist = (RelativeLayout) findViewById(R.id.searchlist);
+		restlist = (RelativeLayout) findViewById(R.id.restlist);
 		//ListAdapter la = new ListAdapter(this.setContentView(R.array.car_database));
 		//ListAdapter la = new ListAdapter(this, R.array.car_database);
 		
@@ -114,6 +152,7 @@ public class MainActivitycartrader extends Activity {
 		//tv4.setText(text2);
 		//lv1.addHeaderView(tv4);
 		lv1.setAdapter(aadapter);
+		lv2.setAdapter(aadapter2);
 		//tv3.setText(getPackageName());
 		
 
@@ -153,6 +192,8 @@ public class MainActivitycartrader extends Activity {
             	
             	startService(myintent);
             	//bindService(myintent, sc, 0);
+            	
+            	
 
             	
             	
@@ -226,6 +267,38 @@ public class MainActivitycartrader extends Activity {
             public void onClick(View v) {
                 // Perform action on click
             	searchlist.setVisibility(8);//0vis, 4invis, 8 gone
+            	main.setVisibility(0);//0vis, 4invis, 8 gone
+
+           	 }
+            });      
+        
+        
+        
+        button5.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                // Perform action on click
+            	//tv4.setText(text2);
+            	//array=myintent.getStringArrayExtra("com.keshogroup.cartrader.array");
+            	
+            	//Log.i("JSON", " "+array[51]);
+
+            	//aadapter2.clear();
+            	//aadapter2.add("array");
+            	//aadapter2.notifyDataSetChanged();
+            	//lv2.requestLayout();
+            	//lv2.invalidate();
+            	
+            	//aadapter2.;//resets the data based on any new REST info
+            	restlist.setVisibility(0);//0vis, 4invis, 8 gone
+            	main.setVisibility(8);//0vis, 4invis, 8 gone
+
+           	 }
+            });       
+        
+        buttonback2.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                // Perform action on click
+            	restlist.setVisibility(8);//0vis, 4invis, 8 gone
             	main.setVisibility(0);//0vis, 4invis, 8 gone
 
            	 }
